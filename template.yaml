@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-startec2instance-registroute53
+
+Globals:
+  Function:
+    Timeout: 30
+
+Parameters:
+  IDs:
+    Type: List<AWS::EC2::Instance::Id>
+    Description: EC2 Instance IDs
+
+Resources:
+  Route53Regist:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: src/
+      Handler: index.lambda_handler
+      Runtime: python2.7
+      AutoPublishAlias: v1
+      Policies:
+        - {
+          "Version": "2012-10-17",
+          "Statement":[
+            {
+              "Sid":"Route53Regist01",
+              "Effect": "Allow",
+              "Action": "route53:ChangeResourceRecordSets",
+              "Resource": "arn:aws:route53:::hostedzone/*"
+            },
+            {
+              "Sid":"ec2",
+              "Effect": "Allow",
+              "Action": "ec2:DescribeInstances",
+              "Resource": "*"
+            }
+          ]
+        }
+      Events:
+          EC2InstanceStart:
+            Type: CloudWatchEvent
+            Properties:
+              Pattern:
+                    source:
+                      - "aws.ec2"
+                    detail-type: 
+                      - "EC2 Instance State-change Notification"
+                    detail:
+                      state:
+                        - "running"
+                      instance-id: 
+                        !Ref IDs
