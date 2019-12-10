@@ -11,10 +11,12 @@ EC2インスタンスは起動時のパブリックIPが異なります。その
 - EC２インスタンスには、パブリックIPが付与されている必要があります
 - Elastic IPは不要です
 - EC2インスタンスのタグに２個のタグが付与しておく必要があります
+- 
     |キー|バリュー|
     |--|--|
     |DNSname|hogehoge.web-integration.pro|
     |HostZoneID|AAAAAAAAAAA|
+    
 - `HostZoneID`に`DNSname`を事前に登録しておく必要があります。
   - これは、EC2のタグ設定でAレコードが乱立するのを防止することが目的です。初期利用時には、Route53の管理者へ、DNSNameと同じレコードを登録してもらってください
 ## 利用サービス
