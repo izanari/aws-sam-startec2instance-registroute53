@@ -9,12 +9,13 @@ ec2client = boto3.client("ec2")
 route53client = boto3.client("route53")
 
 def lambda_handler(event,context):
+    
     main(event)
     
     return "OK"
 
 def main(event):
-    instid = event['instance-id']
+    instid = event['detail']['instance-id']
     response = ec2client.describe_instances(
                     InstanceIds=[
                         instid
